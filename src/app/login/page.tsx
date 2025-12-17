@@ -18,12 +18,13 @@ export default function loginpage(){
         try {
             setloading(true)
             const response = await axios.post("/api/users/login", user)
-            toast.success(response.data)
+            toast.success(response.data.message || "Login successful!")
             router.push("/profile")
             
-        } catch (error:any) {
-            toast.error(error.message)
-        }finally{
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.error || error.message || "Login failed"
+            toast.error(errorMessage)
+        } finally {
             setloading(false)
         }
     }
@@ -65,12 +66,11 @@ export default function loginpage(){
                     </div>
 
                     <button
-                        onClick={onlogin}
                         type="submit"
-                        disabled={buttonDisabled}
+                        disabled={buttonDisabled || loading}
                         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Login
+                        {loading ? "Processing..." : "Login"}
                     </button>
                 </form>
 
